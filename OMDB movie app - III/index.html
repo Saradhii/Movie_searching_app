@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            text-align: center;
+        }
+        #top{
+            width:80%;
+            margin:auto;
+            margin-top: 10px;
+            border:2px solid black;
+        }
+        #top>img{
+            width:90%;
+            height:200px;
+            padding:10px;
+        }
+       #middle
+        {
+            width:80%;
+            margin:auto;
+            margin-top: 10px;
+            border:2px solid black;
+        }
+        lable{
+           font-size: 19px;
+           font-family: sans-serif;
+           margin-top: 10px;
+        }
+        #ogbottom
+        {
+           display:flex;
+           border:2px solid black;
+           width:80%;
+            margin:auto;
+            margin-top: 10px;
+            border:2px solid black;
+        }
+        #ogbottom>div{
+            padding:30px;
+        }
+        #details{
+            font-size: 20px;
+            font-family: sans-serif;
+            color: blueviolet;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="top">
+     <img src="https://static.amazon.jobs/teams/53/images/IMDb_Header_Page.jpg?1501027252"/>
+    </div>
+    <div id="middle">
+    <br>
+    <lable>Search Your Favorite Movie :</lable><br><br>
+    <input type="text" name="movie" id="movie"/>
+    <input type="submit" id="searchmovie" value="Search"/>
+    <br><br>
+    </div>
+    <div id="ogbottom">
+        <div id="bottom">
+        </div>
+        <div id="details">
+
+        </div>
+
+    </div>
+    
+    
+</body>
+</html>
+<script>
+document.querySelector("#searchmovie").addEventListener("click", search);
+function search() {
+  let movie = document.querySelector("#movie").value;
+  let url=`https://www.omdbapi.com/?t=${movie}&apikey=39184c11`;
+    var data;
+    async function req(){
+        try
+        {
+            let res = await fetch(url); 
+            data = await res.json();
+            console.log(data);
+        }
+        catch(err)
+        {
+            console.log(err);
+        }  
+        let title = data.Title;
+        let movie = document.querySelector("#movie").value;
+        let rating = data.imdbRating;
+        let moviesdisplay=document.querySelector("#bottom");
+        moviesdisplay.innerHTML=null;
+        let detailsdisplay=document.querySelector("#details");
+        detailsdisplay.innerHTML=null;
+        if(movie==title)
+        {
+            let div = document.createElement("div");
+            let img = document.createElement("img");
+            img.src= data.Poster;
+            let title = document.createElement("p");
+            title.innerText=`Title:  ${data.Title}`;
+            let genre = document.createElement("p");
+            genre.innerText=`Genre:  ${data.Genre}`;
+            let released= document.createElement("p");
+            released.innerText=`Released:  ${data.Released}`;
+            let duration= document.createElement("p");
+            duration.innerText=`Runtime:  ${data.Runtime}`;
+            let ImdbRating= document.createElement("p");
+            ImdbRating.innerText=`imdbRating:  ${data.imdbRating}`;
+            console.log(rating);
+            if(rating>8.5)
+            {
+                let tag= document.createElement("p");
+                tag.style.color="gold";
+                tag.innerText="🏷 Recommended";
+                document.querySelector("#details").append(tag);
+            }
+            document.querySelector("#details").append(title,genre,released,duration,ImdbRating);
+            div.append(img)
+            document.querySelector("#bottom").append(div);
+        }
+        else
+        {
+            let div = document.createElement("div");
+            let img = document.createElement("img");
+            img.src="https://freefrontend.com/assets/img/html-funny-404-pages/SVG-Animation-404-Page.gif";
+            img.style.width=`600px`;
+            img.style.height=`400px`;
+            let error=document.createElement("h2");
+            error.innerText="Movie You are looking for is not avaliable !"
+            document.querySelector("#details").append(error);
+            div.append(img)
+            document.querySelector("#bottom").append(div);
+        }
+    }
+    req();
+    
+    
+    }
+</script>
